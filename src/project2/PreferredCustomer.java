@@ -6,11 +6,11 @@ package project2;
  * @author James Dunlap
  */
 public class PreferredCustomer extends Customer{
-    protected int discount;
+    protected double discount;
     
-    public PreferredCustomer(){discount = 0;}
-    public PreferredCustomer(String f, String l, int i, double t, int d){super(f, l, i, t); discount = d;}
+    public PreferredCustomer(){super(); discount = 0;}
+    public PreferredCustomer( int i, String f, String l, double t, double d){super(i, f, l, t); discount = d;}
     
-    public int getDiscount(){return discount;}
-    public void setDiscount(int x){discount = x;}
+    public double getDiscount(){return discount;}
+    public void setDiscount(double x){discount = x;}
 }

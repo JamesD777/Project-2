@@ -6,7 +6,7 @@ package project2;
  * @author James Dunlap
  */
 public class Customer {
-    public Customer(String f, String l, int i, double t){fname = f; lname = l; id = i; total = t;}
+    public Customer(int i, String f, String l, double t){fname = f; lname = l; id = i; total = t;}
     public Customer(){fname = ""; lname = ""; id = 0; total = 0.0;}
     
     protected String fname;
