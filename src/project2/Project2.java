@@ -9,26 +9,24 @@ public class Project2 {
 
     public static void main(String[] args) throws FileNotFoundException{
         String line;
-        try {
-            File pref = new File("preferred.dat");
-            PreferredCustomer[] P = new PreferredCustomer[0];
-            Scanner s = new Scanner(pref);
-            
-            while(s.hasNext()){
-                line = s.nextLine();
-                line=line.substring(0,line.length() -1);
-                Scanner s2 = new Scanner(line);
-                PreferredCustomer p1 = new PreferredCustomer();
-                p1.setID(s2.nextInt());
-                p1.setFname(s2.next());
-                p1.setLname(s2.next());
-                p1.setTotal(s2.nextDouble());
-                p1.setDiscount(s2.nextInt());
-                P = addPCustomer(P,p1);
-            }
-            s.close();
-        }catch (FileNotFoundException f){
-            System.out.println("File not found" + f);
+        File pref = new File("preferred.dat");
+        PreferredCustomer[] P = null;
+        if(pref.exists() && !pref.isDirectory()){
+            P = new PreferredCustomer[0];
+                Scanner s = new Scanner(pref);
+                while(s.hasNext()){
+                    line = s.nextLine();
+                    line=line.substring(0,line.length() -1);
+                    Scanner s2 = new Scanner(line);
+                    PreferredCustomer p1 = new PreferredCustomer();
+                    p1.setID(s2.nextInt());
+                    p1.setFname(s2.next());
+                    p1.setLname(s2.next());
+                    p1.setTotal(s2.nextDouble());
+                    p1.setDiscount(s2.nextInt());
+                    P = addPCustomer(P,p1);
+                }
+                s.close();
         }
         
         try {
@@ -50,34 +48,31 @@ public class Project2 {
             System.out.println("File not found" + f);
         }
         
-        try {
-            File o = new File("orders.dat");
-            Scanner s = new Scanner(o);
-            int spot;
-            int id;
-            while(s.hasNextLine()){
-                spot = -1;
-                id = s.nextInt();
-                for(int i = 0; i < C.length;i++){
-                    if(C[i].getID() == id)
+        File o = new File("orders.dat");
+        Scanner s = new Scanner(o);
+        int spot;
+        int id;
+        while(s.hasNextLine()){
+            spot = -1;
+            id = s.nextInt();
+            for(int i = 0; i < C.length;i++){
+                if(C[i].getID() == id)
+                    spot = i;
+            }
+            if(spot != -1)
+                P = payC(spot, surfacePrice(s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble()), P);
+            else{
+                for(int i = 0; i < P.length;i++){
+                    if(P[i].getID() == id)
                         spot = i;
                 }
                 if(spot != -1)
-                    payC(spot, surfacePrice(s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble()), P);
-                else{
-                    for(int i = 0; i < P.length;i++){
-                        if(P[i].getID() == id)
-                            spot = i;
-                    }
-                    if(spot != -1)
-                        payP(spot, surfacePrice(s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble()), P);
-                }
-                    
+                    P = payP(spot, surfacePrice(s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble(),s.nextDouble()), P);
             }
-            s.close();
-        } catch (FileNotFoundException f) {
-             System.out.println("File not found" + f);
+
         }
+        s.close();
+
         File cOUT = new File("customer1.dat");
         PrintWriter cPrint = new PrintWriter(cOUT);
         File pOUT = new File("preferred1.dat");
@@ -144,6 +139,8 @@ public class Project2 {
     }
     public static PreferredCustomer[] addPCustomer(PreferredCustomer[] p, PreferredCustomer p1){
         PreferredCustomer[] arr = new PreferredCustomer[p.length + 1];
+        if(p == null)
+            p = new PreferredCustomer[0];
         if(p.length != 0){
             for(int i = 0;i < arr.length-1;i++){
                 arr[i] = p[i];
